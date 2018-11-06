@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Sakikku</AssemblyName>
+    <RootNamespace>Payvision.Diagnostics.Health</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <Authors>Payvision</Authors>
+    <Description>This library allows declare a health check service for .Net applications.</Description>
+    <PackageIconUrl>https://image.ibb.co/fR4aGU/icon_health_4.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/payvision-development/sakikku.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>sakikku health check diagnostics</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Projects\payvision-development\sakikku\src\Health.Service\bin\debug\Sakikku.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Projects\payvision-development\sakikku\src\Health.Service\bin\release\Sakikku.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

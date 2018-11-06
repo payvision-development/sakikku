@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Sakikku.Abstractions</AssemblyName>
+    <RootNamespace>Payvision.Diagnostics.Health</RootNamespace>
+    <Authors>Payvision</Authors>
+    <Description>Abstractions for defining health checks in Sakikku service.</Description>
+    <PackageIconUrl>https://image.ibb.co/fR4aGU/icon_health_4.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/payvision-development/sakikku.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>sakikku health check diagnostics</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Projects\payvision-development\sakikku\src\Health.Abstractions\bin\debug\Sakikku.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Projects\payvision-development\sakikku\src\Health.Abstractions\bin\release\Sakikku.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>
