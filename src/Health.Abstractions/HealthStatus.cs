@@ -5,19 +5,11 @@
     /// <summary>
     /// Represents the status of a health check result.
     /// </summary>
-    public struct HealthStatus : IEquatable<HealthStatus>
+    public struct HealthStatus : IEquatable<HealthStatus>, IComparable<HealthStatus>
     {
         private readonly byte value;
 
-        private HealthStatus(byte value)
-        {
-            this.value = value;
-        }
-
-        /// <summary>
-        /// Gets the value indicating that the status is invalid or the check couldn't be performed.
-        /// </summary>
-        public static HealthStatus Unknown { get; } = new HealthStatus(byte.MaxValue);
+        private HealthStatus(byte value) => this.value = value;
 
         /// <summary>
         /// Gets the value indicating that the health check determined that the component is healthy.
@@ -34,8 +26,9 @@
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator HealthStatus(string value)
+        public static explicit operator HealthStatus(string value)
         {
             switch (value.ToLowerInvariant())
             {
@@ -44,7 +37,7 @@
                 case "unhealthy":
                     return Unhealthy;
                 default:
-                    return Unknown;
+                    throw new ArgumentException(nameof(value));
             }
         }
 
@@ -52,32 +45,37 @@
         /// Performs an implicit conversion from <see cref="byte"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator HealthStatus(byte value) => new HealthStatus(value);
+        public static explicit operator HealthStatus(byte value) =>
+            value <= Unhealthy.value ? new HealthStatus(value) : throw new ArgumentException(nameof(value));
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="short"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator HealthStatus(short value) =>
-            value <= byte.MaxValue && value >= byte.MinValue ? new HealthStatus((byte)value) : Unknown;
+        public static explicit operator HealthStatus(short value) =>
+            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="int"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator HealthStatus(int value) =>
-            value <= byte.MaxValue && value >= byte.MinValue ? new HealthStatus((byte)value) : Unknown;
+        public static explicit operator HealthStatus(int value) =>
+            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="long"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator HealthStatus(long value) =>
-            value <= byte.MaxValue && value >= byte.MinValue ? new HealthStatus((byte)value) : Unknown;
+        public static explicit operator HealthStatus(long value) =>
+            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="HealthStatus"/> to <see cref="string"/>.
@@ -115,6 +113,38 @@
         public static implicit operator long(HealthStatus status) => status.value;
 
         /// <summary>
+        /// Implements the operator greater than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is greater than right operand, false otherwise.</returns>
+        public static bool operator >(HealthStatus left, HealthStatus right) => left.value > right.value;
+
+        /// <summary>
+        /// Implements the operator less than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is lower than right operand, false otherwise.</returns>
+        public static bool operator <(HealthStatus left, HealthStatus right) => left.value < right.value;
+
+        /// <summary>
+        /// Implements the operator greater or equals than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is greater or equals than right operand, false otherwise.</returns>
+        public static bool operator >=(HealthStatus left, HealthStatus right) => left.value >= right.value;
+
+        /// <summary>
+        /// Implements the operator less or equals than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is lower or equals than right operand, false otherwise.</returns>
+        public static bool operator <=(HealthStatus left, HealthStatus right) => left.value <= right.value;
+
+        /// <summary>
         /// Implements the operator ==.
         /// </summary>
         /// <param name="left">The left operand.</param>
@@ -140,6 +170,12 @@
         public override int GetHashCode() => this.value.GetHashCode();
 
         /// <inheritdoc />
+        public int CompareTo(HealthStatus other)
+        {
+            return this.value.CompareTo(other.value);
+        }
+
+        /// <inheritdoc />
         public override string ToString()
         {
             switch (this.value)
@@ -149,7 +185,7 @@
                 case 1:
                     return nameof(Unhealthy);
                 default:
-                    return nameof(Unknown);
+                    return string.Empty;
             }
         }
     }
