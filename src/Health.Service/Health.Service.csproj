@@ -22,4 +22,8 @@
     <DocumentationFile>C:\Projects\payvision-development\sakikku\src\Health.Service\bin\release\Sakikku.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Health.Abstractions\Health.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>
