@@ -46,6 +46,6 @@
         /// <summary>
         /// Gets any extra data related to the health check.
         /// </summary>
-        public readonly IReadOnlyDictionary<string, object> Data;
+        public readonly IReadOnlyDictionary<string, string> Data;
     }
 }

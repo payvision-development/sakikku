@@ -17,10 +17,20 @@
         public static HealthStatus Healthy { get; } = new HealthStatus(0);
 
         /// <summary>
+        /// Gets the value indicating that the application is either starting or in a warm-up state.
+        /// </summary>
+        public static HealthStatus Starting { get; } = new HealthStatus(1);
+
+        /// <summary>
+        /// Gets the value that indicating that the application is in a degraded state.
+        /// </summary>
+        public static HealthStatus Degraded { get; } = new HealthStatus(2);
+
+        /// <summary>
         /// Gets the value indicating that the health check determined that the component is unhealthy, or
         /// an exception was thrown while executing such check.
         /// </summary>
-        public static HealthStatus Unhealthy { get; } = new HealthStatus(1);
+        public static HealthStatus Unhealthy { get; } = new HealthStatus(byte.MaxValue);
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="HealthStatus"/>.
@@ -34,6 +44,10 @@
             {
                 case "healthy":
                     return Healthy;
+                case "starting":
+                    return Starting;
+                case "degraded":
+                    return Degraded;
                 case "unhealthy":
                     return Unhealthy;
                 default:
@@ -183,6 +197,10 @@
                 case 0:
                     return nameof(Healthy);
                 case 1:
+                    return nameof(Starting);
+                case 2:
+                    return nameof(Degraded);
+                case byte.MaxValue:
                     return nameof(Unhealthy);
                 default:
                     return string.Empty;

@@ -13,7 +13,7 @@
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
         /// <param name="data">The data.</param>
-        public HealthCheckResult(HealthStatus status, string message, IReadOnlyDictionary<string, object> data)
+        public HealthCheckResult(HealthStatus status, string message, IReadOnlyDictionary<string, string> data)
         {
             this.Status = status;
             this.Message = message;
@@ -33,6 +33,6 @@
         /// <summary>
         /// Gets any extra data related to the health check.
         /// </summary>
-        public readonly IReadOnlyDictionary<string, object> Data;
+        public readonly IReadOnlyDictionary<string, string> Data;
     }
 }
