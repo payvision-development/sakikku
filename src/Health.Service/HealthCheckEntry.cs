@@ -11,16 +11,23 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HealthCheckEntry"/> struct.
         /// </summary>
-        /// <param name="result">The result.</param>
+        /// <param name="status">The status.</param>
+        /// <param name="message">The message.</param>
         /// <param name="duration">The duration.</param>
+        /// <param name="data">The data.</param>
         /// <param name="tags">The tags.</param>
-        internal HealthCheckEntry(HealthCheckResult result, TimeSpan duration, IEnumerable<string> tags)
+        internal HealthCheckEntry(
+            HealthStatus status,
+            string message,
+            TimeSpan duration,
+            IReadOnlyDictionary<string, string> data,
+            IEnumerable<string> tags)
         {
+            this.Status = status;
+            this.Message = message;
+            this.Data = data;
             this.Duration = duration;
             this.Tags = tags;
-            this.Status = result.Status;
-            this.Message = result.Message;
-            this.Data = result.Data;
         }
 
         /// <summary>

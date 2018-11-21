@@ -19,7 +19,7 @@
                 { new[] { HealthStatus.Healthy, HealthStatus.Unhealthy }, HealthStatus.Unhealthy },
                 { new[] { HealthStatus.Unhealthy, HealthStatus.Healthy }, HealthStatus.Unhealthy },
                 { new[] { HealthStatus.Unhealthy, HealthStatus.Unhealthy }, HealthStatus.Unhealthy },
-                { new[] { HealthStatus.Degraded, HealthStatus.Starting }, HealthStatus.Starting }
+                { new[] { HealthStatus.Starting, HealthStatus.Degraded }, HealthStatus.Degraded }
             };
 
         [Theory]
@@ -30,8 +30,10 @@
                                           statuses.ToDictionary(
                                                                 x => Guid.NewGuid().ToString(),
                                                                 x => new HealthCheckEntry(
-                                                                                          new HealthCheckResult(x, string.Empty, null),
+                                                                                          x,
+                                                                                          string.Empty,
                                                                                           TimeSpan.Zero,
+                                                                                          new Dictionary<string, string>(), 
                                                                                           Enumerable.Empty<string>())),
                                           TimeSpan.Zero);
 

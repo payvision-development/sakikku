@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="IHealthCheckService.cs" company="Payvision">
+// <copyright file="IHealthService.cs" company="Payvision">
 //     Payvision Copyright © 2018
 // </copyright>
 // -----------------------------------------------------------------------
@@ -12,7 +12,7 @@ namespace Payvision.Diagnostics.Health
     /// <summary>
     /// A health service that contains multiple <see cref="IHealthCheck"/>.
     /// </summary>
-    public interface IHealthCheckService
+    public interface IHealthService
     {
         /// <summary>
         /// Checks the health of the application executing asynchronously the configured health checks.
