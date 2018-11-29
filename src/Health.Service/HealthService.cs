@@ -7,7 +7,6 @@
 namespace Payvision.Diagnostics.Health
 {
     using System;
-    using System.Reactive.Concurrency;
 
     using Reactive;
 
@@ -30,9 +29,9 @@ namespace Payvision.Diagnostics.Health
                 throw new ArgumentNullException(nameof(configure));
             }
 
-            var set = new HealthCheckSet();
-            configure(set);
-            return new ReactiveHealthService(set.Build(Scheduler.Default));
+            var reportBuilder = new ObservableHealthReportBuilder();
+            configure(reportBuilder);
+            return new ReactiveHealthService(reportBuilder);
         }
     }
 }

@@ -6,6 +6,7 @@
 
 namespace Payvision.Health.Service.Tests
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Diagnostics.Health;
@@ -19,15 +20,18 @@ namespace Payvision.Health.Service.Tests
                 return false;
             }
 
+            HashSet<string> expectedKeys = new HashSet<string>();
             foreach (string key in expected.Entries.Keys)
             {
                 if (!report.Entries.TryGetValue(key, out HealthCheckEntry entry) || !expected.Entries[key].AreEqual(entry))
                 {
                     return false;
                 }
+
+                expectedKeys.Add(key);
             }
 
-            return true;
+            return report.Entries.Keys.All(x => expectedKeys.Contains(x));
         }
 
         public static bool AreEqual(this HealthCheckEntry expected, HealthCheckEntry entry) =>
@@ -36,5 +40,10 @@ namespace Payvision.Health.Service.Tests
             expected.Data.SequenceEqual(entry.Data) &&
             expected.Tags.SequenceEqual(entry.Tags) &&
             expected.Duration == entry.Duration;
+
+        public static bool AreEqual(this HealthCheckResult expected, HealthCheckResult result) =>
+            expected.Status == result.Status &&
+            expected.Message == result.Message &&
+            expected.Data.SequenceEqual(result.Data);
     }
 }

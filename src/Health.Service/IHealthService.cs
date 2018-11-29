@@ -6,13 +6,14 @@
 
 namespace Payvision.Diagnostics.Health
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
     /// A health service that contains multiple <see cref="IHealthCheck"/>.
     /// </summary>
-    public interface IHealthService
+    public interface IHealthService : IDisposable
     {
         /// <summary>
         /// Checks the health of the application executing asynchronously the configured health checks.

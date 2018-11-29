@@ -5,3 +5,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("Health.Service.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

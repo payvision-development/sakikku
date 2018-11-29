@@ -8,7 +8,8 @@ namespace Payvision.Health.Service.Tests.Reactive
 {
     using System;
     using System.Collections.Generic;
-    using System.Reactive.Disposables;
+    using System.Reactive.Concurrency;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -27,30 +28,42 @@ namespace Payvision.Health.Service.Tests.Reactive
             var expected = new HealthReport(
                                             new Dictionary<string, HealthCheckEntry>
                                             {
-                                                ["first"] = new HealthCheckEntry(
-                                                                                 HealthStatus.Healthy,
-                                                                                 "test",
-                                                                                 TimeSpan.FromMilliseconds(7),
-                                                                                 new Dictionary<string, string>(),
-                                                                                 new string[0])
+                                                ["test"] = new HealthCheckEntry(
+                                                                                HealthStatus.Healthy,
+                                                                                "OK",
+                                                                                TimeSpan.FromMilliseconds(300),
+                                                                                new Dictionary<string, string> { ["TEST"] = "OK" },
+                                                                                new[] { "TEST", "OK" })
                                             },
-                                            TimeSpan.FromMilliseconds(30));
-            var sequence = Substitute.For<IObservable<HealthReport>>();
-            sequence
-                .Subscribe(Arg.Any<IObserver<HealthReport>>())
-                .Returns(
-                         info =>
-                         {
-                             var observer = info.Arg<IObserver<HealthReport>>();
-                             observer.OnNext(expected);
-                             observer.OnCompleted();
-                             return Disposable.Empty;
-                         });
-            var service = new ReactiveHealthService(sequence);
+                                            TimeSpan.FromMilliseconds(300));
+            var builder = Substitute.For<IObservableBuilder<HealthReport>>();
+            builder.Build(Arg.Any<IScheduler>(), Arg.Any<ICompositeDisposable>())
+                .Returns(Observable.Return(expected));
 
-            HealthReport result = await service.CheckAsync(CancellationToken.None);
+            using (var subject = new ReactiveHealthService(builder))
+            {
+                HealthReport result = await subject.CheckAsync(CancellationToken.None);
 
-            Assert.True(expected.AreEqual(result));
+                Assert.True(expected.AreEqual(result));
+            }
+        }
+
+        [Fact]
+        public void Dispose_DisposedHealthChecks()
+        {
+            var disposable = Substitute.For<IDisposable>();
+            var builder = Substitute.For<IObservableBuilder<HealthReport>>();
+            builder.Build(Arg.Any<IScheduler>(), Arg.Any<ICompositeDisposable>())
+                .Returns(info =>
+                {
+                    info.Arg<ICompositeDisposable>().Attach(disposable);
+                    return Substitute.For<IObservable<HealthReport>>();
+                });
+            var subject = new ReactiveHealthService(builder);
+
+            subject.Dispose();
+
+            disposable.Received().Dispose();
         }
     }
 }
