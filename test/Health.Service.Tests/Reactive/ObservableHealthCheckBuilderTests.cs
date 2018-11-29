@@ -70,7 +70,7 @@ namespace Payvision.Health.Service.Tests.Reactive
                 .Returns(
                          _ =>
                          {
-                             scheduler.Sleep(expected.Duration.Ticks - 2); // scheduling on the same scheduler will add an extra tick.
+                             scheduler.Sleep(expected.Duration.Ticks - 1); // scheduling on the same scheduler will add an extra tick.
                              return new HealthCheckResult(expected.Status, expected.Message, expected.Data);
                          });
             IDisposable pollingHandler = null;
@@ -87,8 +87,8 @@ namespace Payvision.Health.Service.Tests.Reactive
             }
 
             observer.Messages.AssertEqual(
-                                          OnNext<HealthCheckEntry>(expected.Duration.Ticks, x => expected.AreEqual(x)),
-                                          OnCompleted<HealthCheckEntry>(expected.Duration.Ticks));
+                                          OnNext<HealthCheckEntry>(expected.Duration.Ticks + 1, x => expected.AreEqual(x)),
+                                          OnCompleted<HealthCheckEntry>(expected.Duration.Ticks + 1));
             disposable.Received().Attach(Arg.Any<IDisposable>());
         }
 
@@ -107,7 +107,7 @@ namespace Payvision.Health.Service.Tests.Reactive
                 .Returns(
                          _ =>
                          {
-                             scheduler.Sleep(expected.Duration.Ticks - 2); // scheduling on the same scheduler will add an extra tick.
+                             scheduler.Sleep(expected.Duration.Ticks - 1); // scheduling on the same scheduler will add an extra tick.
                              return new HealthCheckResult(expected.Status, expected.Message, expected.Data);
                          });
             IDisposable pollingHandler = null;
@@ -124,22 +124,16 @@ namespace Payvision.Health.Service.Tests.Reactive
                 {
                     scheduler.AdvanceTo(expected.Duration.Ticks + 1);
                     observer.Messages.AssertEqual(
-                                                  OnNext<HealthCheckEntry>(expected.Duration.Ticks, x => expected.AreEqual(x)),
-                                                  OnCompleted<HealthCheckEntry>(expected.Duration.Ticks));
+                                                  OnNext<HealthCheckEntry>(expected.Duration.Ticks + 1, x => expected.AreEqual(x)),
+                                                  OnCompleted<HealthCheckEntry>(expected.Duration.Ticks + 1));
                 }
 
                 observer = scheduler.CreateObserver<HealthCheckEntry>();
                 using (sequence.Subscribe(observer))
                 {
                     scheduler.AdvanceBy(1);
-                    var expectedCached = new HealthCheckEntry(
-                                                              expected.Status,
-                                                              expected.Message,
-                                                              TimeSpan.FromTicks(1),
-                                                              expected.Data,
-                                                              expected.Tags);
                     observer.Messages.AssertEqual(
-                                                  OnNext<HealthCheckEntry>(scheduler.Clock, x => expectedCached.AreEqual(x)),
+                                                  OnNext<HealthCheckEntry>(scheduler.Clock, x => expected.AreEqual(x)),
                                                   OnCompleted<HealthCheckEntry>(scheduler.Clock));
                 }
             }

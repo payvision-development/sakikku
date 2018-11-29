@@ -15,14 +15,13 @@ namespace Payvision.Diagnostics.Health.Reactive
     /// Configuration of a health check to execute in a reactive sequence.
     /// </summary>
     /// <seealso cref="Payvision.Diagnostics.Health.IHealthCheckConfiguration" />
-    internal sealed class ObservableHealthCheckBuilder : IHealthCheckConfiguration,
-        IObservableBuilder<HealthCheckEntry>
+    internal sealed class ObservableHealthCheckBuilder :
+        ObservableBuilder<HealthCheckEntry, ObservableHealthCheckBuilder, IHealthCheckConfiguration>,
+        IHealthCheckConfiguration
     {
         private readonly List<string> currentTags = new List<string>();
 
         private readonly IHealthCheck healthCheck;
-
-        private TimeSpan? polling;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableHealthCheckBuilder"/> class.
@@ -41,23 +40,8 @@ namespace Payvision.Diagnostics.Health.Reactive
         }
 
         /// <inheritdoc />
-        public IHealthCheckConfiguration Polling(TimeSpan pollingInterval)
-        {
-            this.polling = pollingInterval;
-            return this;
-        }
-
-        public IObservable<HealthCheckEntry> Build(IScheduler scheduler, ICompositeDisposable disposable)
-        {
-            IObservable<HealthCheckResult> stream = this.healthCheck.ToObservable(scheduler);
-            if (this.polling.HasValue)
-            {
-                var polledObservable = new PollingObservable<HealthCheckResult>(stream, this.polling.Value, scheduler);
-                disposable.Attach(polledObservable);
-                stream = polledObservable;
-            }
-
-            return stream.ToHealthCheckEntries(this.currentTags, scheduler);
-        }
+        protected override IObservable<HealthCheckEntry> BuildSourceObservable(IScheduler scheduler, ICompositeDisposable disposable) =>
+            this.healthCheck.ToObservable(scheduler)
+                .ToHealthCheckEntries(this.currentTags, scheduler);
     }
 }

@@ -11,7 +11,7 @@ namespace Payvision.Diagnostics.Health
     /// <summary>
     /// Configures a <see cref="IHealthCheck"/> instance to be executed within a <see cref="IHealthService"/>.
     /// </summary>
-    public interface IHealthCheckConfiguration : ISchedulingConfiguration<IHealthCheckConfiguration>
+    public interface IHealthCheckConfiguration
     {
         /// <summary>
         /// Sets the specified tags to any result produced by the health check.

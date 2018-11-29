@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ISchedulingConfiguration`1.cs" company="Payvision">
+// <copyright file="IBehaviorConfiguration`1.cs" company="Payvision">
 //     Payvision Copyright © 2018
 // </copyright>
 // -----------------------------------------------------------------------
@@ -12,7 +12,7 @@ namespace Payvision.Diagnostics.Health
     /// Configures how a component is going to be executed within a task scheduler.
     /// </summary>
     /// <typeparam name="TThis">Type of the configuration interface.</typeparam>
-    public interface ISchedulingConfiguration<out TThis>
+    public interface IBehaviorConfiguration<out TThis>
     {
         /// <summary>
         /// Configures the execution to be scheduled in a polling in order to retrieve the

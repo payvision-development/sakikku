@@ -21,9 +21,9 @@ namespace Payvision.Health.Service.Tests
         {
             var configure = Substitute.For<Action<IHealthCheckSet>>();
 
-            IHealthService result = HealthService.Create(configure);
+            IHealthServiceBuilder builder = HealthService.Create(configure);
 
-            Assert.NotNull(result);
+            Assert.NotNull(builder);
             configure.Received().Invoke(Arg.Any<IHealthCheckSet>());
         }
     }
