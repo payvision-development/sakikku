@@ -59,37 +59,48 @@
         /// Performs an implicit conversion from <see cref="byte"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
+        /// <exception cref="InvalidCastException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator HealthStatus(byte value) =>
-            value <= Unhealthy.value ? new HealthStatus(value) : throw new ArgumentException(nameof(value));
+        public static explicit operator HealthStatus(byte value)
+        {
+            switch (value)
+            {
+                case 0:
+                    return Healthy;
+                case 1:
+                    return Starting;
+                case 2:
+                    return Degraded;
+                case byte.MaxValue:
+                    return Unhealthy;
+                default:
+                    throw new InvalidCastException();
+            }
+        }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="short"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
+        /// <exception cref="InvalidCastException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator HealthStatus(short value) =>
-            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
+        public static explicit operator HealthStatus(short value) => (HealthStatus)(byte)value;
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="int"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
+        /// <exception cref="InvalidCastException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator HealthStatus(int value) =>
-            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
+        public static explicit operator HealthStatus(int value) => (HealthStatus)(byte)value;
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="long"/> to <see cref="HealthStatus"/>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <exception cref="ArgumentException">If the specified value is an invalid value.</exception>
+        /// <exception cref="InvalidCastException">If the specified value is an invalid value.</exception>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator HealthStatus(long value) =>
-            value <= Unhealthy.value ? new HealthStatus((byte)value) : throw new ArgumentException(nameof(value));
+        public static explicit operator HealthStatus(long value) => (HealthStatus)(byte)value;
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="HealthStatus"/> to <see cref="string"/>.
