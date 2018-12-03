@@ -17,8 +17,7 @@ namespace Payvision.Diagnostics.Health.Reactive
     /// Builder of reactive sequences that returns health reports.
     /// </summary>
     /// <seealso cref="Payvision.Diagnostics.Health.IHealthCheckSet" />
-    internal sealed class ObservableHealthReportBuilder : ObservableBuilder<HealthReport, ObservableHealthReportBuilder, IHealthCheckSet>,
-        IHealthCheckSet
+    internal sealed class ObservableHealthReportBuilder : IHealthCheckSet, IObservableBuilder<HealthReport>
     {
         private readonly Dictionary<string, IObservableBuilder<HealthCheckEntry>> healthChecks =
             new Dictionary<string, IObservableBuilder<HealthCheckEntry>>(StringComparer.OrdinalIgnoreCase);
@@ -41,7 +40,8 @@ namespace Payvision.Diagnostics.Health.Reactive
             return configuration;
         }
 
-        protected override IObservable<HealthReport> BuildSourceObservable(IScheduler scheduler, ICompositeDisposable disposable) =>
+        /// <inheritdoc />
+        public IObservable<HealthReport> Build(IScheduler scheduler, ICompositeDisposable disposable) =>
             this.healthChecks
                 .Select(x => x.Value.Build(scheduler, disposable).Select(entry => (x.Key, entry)))
                 .Merge(scheduler)
