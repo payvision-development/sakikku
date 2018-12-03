@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="HealthCheckFactoryExtensionsTests.cs" company="Payvision">
+// <copyright file="HealthCheckSetExtensionsTests.cs" company="Payvision">
 //     Payvision Copyright © 2018
 // </copyright>
 // -----------------------------------------------------------------------
@@ -16,16 +16,17 @@ namespace Payvision.Health.Service.Tests
 
     using Xunit;
 
-    public class HealthCheckFactoryExtensionsTests
+    public class HealthCheckSetExtensionsTests
     {
         [Fact]
         public void For_Generic_Ok()
         {
-            var factory = Substitute.For<IHealthCheckFactory>();
+            const string ExpectedName = "TEST";
+            var subject = Substitute.For<IHealthCheckSet>();
 
-            factory.For<MockHealthCheck>();
+            subject.Add<MockHealthCheck>(ExpectedName);
 
-            factory.Received().For(Arg.Any<MockHealthCheck>());
+            subject.Received().Add(ExpectedName, Arg.Any<MockHealthCheck>());
         }
 
         #region MockHealthCheck

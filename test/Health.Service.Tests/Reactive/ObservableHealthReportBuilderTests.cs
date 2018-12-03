@@ -24,52 +24,50 @@ namespace Payvision.Health.Service.Tests.Reactive
         [Fact]
         public void Build_Ok()
         {
-            TimeSpan firstHealthDuration = TimeSpan.FromMilliseconds(200);
-            TimeSpan secondHealthDuration = TimeSpan.FromMilliseconds(300);
+            var firstEntry = new HealthCheckEntry(
+                                                  HealthStatus.Healthy,
+                                                  "FIRST",
+                                                  TimeSpan.FromMilliseconds(200),
+                                                  new Dictionary<string, string>
+                                                  {
+                                                      ["Policy"] = "first"
+                                                  },
+                                                  new[] { "FIRST" });
+            var secondEntry = new HealthCheckEntry(
+                                                   HealthStatus.Healthy,
+                                                   "SECOND",
+                                                   TimeSpan.FromMilliseconds(300),
+                                                   new Dictionary<string, string>
+                                                   {
+                                                       ["Policy"] = "second"
+                                                   },
+                                                   new[] { "SECOND" });
             var expected = new HealthReport(
                                             new Dictionary<string, HealthCheckEntry>
                                             {
-                                                ["firstEntry"] = new HealthCheckEntry(
-                                                                                      HealthStatus.Healthy,
-                                                                                      "FIRST",
-                                                                                      firstHealthDuration + secondHealthDuration + TimeSpan.FromTicks(-1),
-                                                                                      new Dictionary<string, string>
-                                                                                      {
-                                                                                          ["Policy"] = "first"
-                                                                                      },
-                                                                                      new[] { "FIRST" }),
-                                                ["secondEntry"] = new HealthCheckEntry(
-                                                                                       HealthStatus.Healthy,
-                                                                                       "SECOND",
-                                                                                       secondHealthDuration,
-                                                                                       new Dictionary<string, string>
-                                                                                       {
-                                                                                           ["Policy"] = "second"
-                                                                                       },
-                                                                                       new[] { "SECOND" })
+                                                [nameof(firstEntry)] = firstEntry,
+                                                [nameof(secondEntry)] = secondEntry
                                             },
-                                            firstHealthDuration + secondHealthDuration);
+                                            firstEntry.Duration + secondEntry.Duration + TimeSpan.FromTicks(1));
 
             var scheduler = new TestScheduler();
             var firstCheck = Substitute.For<IHealthCheck>();
             firstCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(_ =>
             {
-                HealthCheckEntry entry = expected.Entries["firstEntry"];
-                scheduler.Sleep(firstHealthDuration.Ticks);
-                return new HealthCheckResult(entry.Status, entry.Message, entry.Data);
+                scheduler.Sleep(firstEntry.Duration.Ticks - 1);
+                return new HealthCheckResult(firstEntry.Status, firstEntry.Message, firstEntry.Data);
             });
             var secondCheck = Substitute.For<IHealthCheck>();
             secondCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(_ =>
             {
-                HealthCheckEntry entry = expected.Entries["secondEntry"];
-                scheduler.Sleep(secondHealthDuration.Ticks - 1);
-                return new HealthCheckResult(entry.Status, entry.Message, entry.Data);
+                scheduler.Sleep(secondEntry.Duration.Ticks - 1);
+                return new HealthCheckResult(secondEntry.Status, secondEntry.Message, secondEntry.Data);
             });
             var disposable = Substitute.For<ICompositeDisposable>();
 
             var subject = new ObservableHealthReportBuilder();
-            subject.Add("firstEntry").For(firstCheck).Tags(expected.Entries["firstEntry"].Tags);
-            subject.Add("secondEntry").For(secondCheck).Tags(expected.Entries["secondEntry"].Tags);
+            subject.Add(nameof(firstEntry), firstCheck).Tags(firstEntry.Tags);
+            subject.Add(nameof(secondEntry), secondCheck).Tags(secondEntry.Tags);
             ITestableObserver<HealthReport> observer = scheduler.CreateObserver<HealthReport>();
 
             using (subject.Build(scheduler, disposable).Subscribe(observer))

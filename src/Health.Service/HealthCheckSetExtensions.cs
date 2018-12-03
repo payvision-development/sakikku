@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="IHealthCheckSet.cs" company="Payvision">
+// <copyright file="HealthCheckSetExtensions.cs" company="Payvision">
 //     Payvision Copyright © 2018
 // </copyright>
 // -----------------------------------------------------------------------
@@ -7,16 +7,18 @@
 namespace Payvision.Diagnostics.Health
 {
     /// <summary>
-    /// Contains a collection of <see cref="IHealthCheck"/> identified by a name.
+    /// <see cref="IHealthCheckSet"/> extension methods.
     /// </summary>
-    public interface IHealthCheckSet
+    public static class HealthCheckSetExtensions
     {
         /// <summary>
         /// Adds a new <see cref="IHealthCheck"/> related to the specified name.
         /// </summary>
+        /// <param name="set">The <see cref="IHealthCheckSet"/> instance.</param>
         /// <param name="name">The name of the health check which must be unique within the collection.</param>
-        /// <param name="healthCheck">The health check instance to be executed within the owning <see cref="IHealthService"/>.</param>
+        /// <typeparam name="T">The type of the health check to add.</typeparam>
         /// <returns>A <see cref="IHealthCheckConfiguration"/> to configure the health check.</returns>
-        IHealthCheckConfiguration Add(string name, IHealthCheck healthCheck);
+        public static IHealthCheckConfiguration Add<T>(this IHealthCheckSet set, string name)
+            where T : IHealthCheck, new() => set.Add(name, new T());
     }
 }
