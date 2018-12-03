@@ -35,8 +35,7 @@
                              await scheduler.Sleep(expected.Duration.Add(TimeSpan.FromTicks(-1))); // TestScheduler will add 1 tick to execution.
                              return new HealthCheckResult(expected.Status, expected.Message, expected.Data);
                          });
-            var reactiveHealthCheck = new ReactiveHealthCheck();
-            reactiveHealthCheck.For(healthCheck);
+            var reactiveHealthCheck = new ReactiveHealthCheck(healthCheck);
             reactiveHealthCheck.Tags(expected.Tags);
             ITestableObserver<HealthCheckEntry> observer = scheduler.CreateObserver<HealthCheckEntry>();
 
@@ -72,8 +71,7 @@
                                                                             throw exception;
                                                                         });
             var scheduler = new TestScheduler();
-            var reactiveHealthCheck = new ReactiveHealthCheck();
-            reactiveHealthCheck.For(healthCheck);
+            var reactiveHealthCheck = new ReactiveHealthCheck(healthCheck);
             reactiveHealthCheck.Tags(expected.Tags);
 
             var result = scheduler.Start(() => reactiveHealthCheck.Build(scheduler));

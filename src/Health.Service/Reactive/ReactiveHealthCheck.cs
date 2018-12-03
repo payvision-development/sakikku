@@ -12,17 +12,15 @@ namespace Payvision.Diagnostics.Health.Reactive
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
 
-    internal sealed class ReactiveHealthCheck : IHealthCheckFactory, IHealthCheckConfiguration
+    internal sealed class ReactiveHealthCheck : IHealthCheckConfiguration
     {
         private readonly List<string> currentTags = new List<string>();
 
-        private IHealthCheck currentHealthCheck;
+        private readonly IHealthCheck currentHealthCheck;
 
-        /// <inheritdoc />
-        public IHealthCheckConfiguration For(IHealthCheck healthCheck)
+        public ReactiveHealthCheck(IHealthCheck currentHealthCheck)
         {
-            this.currentHealthCheck = healthCheck ?? throw new ArgumentNullException(nameof(healthCheck));
-            return this;
+            this.currentHealthCheck = currentHealthCheck;
         }
 
         /// <inheritdoc />

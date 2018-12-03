@@ -26,9 +26,10 @@ namespace Payvision.Health.Service.Tests.Reactive
         [Fact]
         public void Add_ExistingName_ArgumentException()
         {
+            var healthCheck = Substitute.For<IHealthCheck>();
             IHealthCheckSet set = new HealthCheckSet();
-            set.Add("TEST");
-            Assert.Throws<ArgumentException>(() => set.Add("TEST"));
+            set.Add("TEST", healthCheck);
+            Assert.Throws<ArgumentException>(() => set.Add("TEST", healthCheck));
         }
 
         [Fact]
@@ -65,8 +66,8 @@ namespace Payvision.Health.Service.Tests.Reactive
             secondCheck.CheckAsync(Arg.Any<CancellationToken>()).Returns(info => ToResult(expected.Entries["second"]));
 
             var subject = new HealthCheckSet();
-            subject.Add("first").For(firstCheck);
-            subject.Add("second").For(secondCheck);
+            subject.Add("first", firstCheck);
+            subject.Add("second", secondCheck);
             ITestableObserver<HealthReport> observer = scheduler.CreateObserver<HealthReport>();
 
             using (subject.Build(scheduler).Subscribe(observer))

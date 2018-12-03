@@ -10,7 +10,7 @@ namespace Payvision.Diagnostics.Health
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A health service that contains multiple <see cref="IHealthCheck"/>.
+    /// A health service that executes multiple health checks.
     /// </summary>
     public interface IHealthService
     {
