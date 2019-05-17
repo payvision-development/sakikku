@@ -32,7 +32,7 @@
         /// <summary>
         /// Gets the results from each health check polcies executed by the health service.
         /// </summary>
-        public IEnumerable<HealthCheckEntry> Entries { get; }
+        public IEnumerable<HealthCheckEntry> Entries => this.entries;
 
         private static HealthStatus GetLowerStatus(IEnumerable<HealthStatus> statuses)
         {

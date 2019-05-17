@@ -10,14 +10,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HealthCheckEntry"/> struct.
         /// </summary>
+        /// <param name="policy">The policy name.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
         /// <param name="duration">The duration.</param>
         public HealthCheckEntry(
+            string policy,
             HealthStatus status,
             string message,
             TimeSpan duration)
         {
+            this.Policy = policy;
             this.Status = status;
             this.Message = message;
             this.Duration = duration;

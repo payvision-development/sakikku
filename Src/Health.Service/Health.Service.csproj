@@ -1,20 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Payvision.Diagnostics.Health</RootNamespace>
-    <PackageId>Sakikku.Service.Abstractions</PackageId>
+    <PackageId>Sakikku</PackageId>
     <Authors>Payvision</Authors>
     <Company>Payvision</Company>
-    <Product>Sakikku.Service.Abstractions</Product>
-    <Description>Abstractions for health service implementations.</Description>
+    <Product>Sakikku.Service</Product>
+    <Description>Health service that executes health policies using a Rx scheduler.</Description>
     <PackageProjectUrl>https://github.com/payvision-development/sakikku</PackageProjectUrl>
     <PackageIconUrl>https://image.ibb.co/fR4aGU/icon_health_4.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/payvision-development/sakikku.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags />
+    <PackageTags>Sakikku Health</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="4.1.5" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Health.Abstractions\Health.Policy.Abstractions.csproj" />
