@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Payvision.Diagnostics.Health</RootNamespace>
+    <PackageId>Sakikku.Service.Abstractions</PackageId>
+    <Authors>Payvision</Authors>
+    <Company>Payvision</Company>
+    <Product>Sakikku.Service.Abstractions</Product>
+    <Description>Abstractions for health service implementations.</Description>
+    <PackageProjectUrl>https://github.com/payvision-development/sakikku</PackageProjectUrl>
+    <PackageIconUrl>https://image.ibb.co/fR4aGU/icon_health_4.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/payvision-development/sakikku.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags />
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+</Project>
