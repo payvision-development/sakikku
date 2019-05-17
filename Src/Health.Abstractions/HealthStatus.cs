@@ -43,6 +43,54 @@
         /// </summary>
         public static HealthStatus Unhealthy { get; }
 
+        /// <summary>
+        /// Implements the operator greater than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is greater than right operand, false otherwise.</returns>
+        public static bool operator >(HealthStatus left, HealthStatus right) => left.value > right.value;
+
+        /// <summary>
+        /// Implements the operator less than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is lower than right operand, false otherwise.</returns>
+        public static bool operator <(HealthStatus left, HealthStatus right) => left.value < right.value;
+
+        /// <summary>
+        /// Implements the operator greater or equals than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is greater or equals than right operand, false otherwise.</returns>
+        public static bool operator >=(HealthStatus left, HealthStatus right) => left.value >= right.value;
+
+        /// <summary>
+        /// Implements the operator less or equals than.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if left operand is lower or equals than right operand, false otherwise.</returns>
+        public static bool operator <=(HealthStatus left, HealthStatus right) => left.value <= right.value;
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if statuses are equal, false otherwise.</returns>
+        public static bool operator ==(HealthStatus left, HealthStatus right) => left.Equals(right);
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if statuses are different, false otherwise.</returns>
+        public static bool operator !=(HealthStatus left, HealthStatus right) => !left.Equals(right);
+
         /// <inheritdoc />
         public int CompareTo(HealthStatus other) => this.value.CompareTo(other.value);
 
