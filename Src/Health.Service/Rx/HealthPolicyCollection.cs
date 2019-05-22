@@ -11,7 +11,8 @@
     /// </summary>
     internal sealed class HealthPolicyCollection : IHealthPolicyCollection
     {
-        private readonly Dictionary<string, HealthPolicyConfiguration> policies = new Dictionary<string, HealthPolicyConfiguration>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, HealthPolicyConfiguration> policies = 
+            new Dictionary<string, HealthPolicyConfiguration>(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc />
         public IHealthPolicyConfiguration Add(string policyName, IHealthPolicy healthPolicy)
@@ -31,7 +32,8 @@
         /// </summary>
         /// <param name="scheduler">The scheduler used to execute the sequence.</param>
         /// <returns>The merged sequence.</returns>
-        internal IObservable<HealthCheckEntry> Build(IScheduler scheduler) =>
-            this.policies.Values.Select(x => x.Build(scheduler)).Merge(scheduler);
+        internal IObservable<HealthCheckEntry> Build(IScheduler scheduler, ICollection<IDisposable> disposables) =>
+            this.policies.Values.Select(x => x.Build(scheduler, disposables))
+                .Merge(scheduler);
     }
 }

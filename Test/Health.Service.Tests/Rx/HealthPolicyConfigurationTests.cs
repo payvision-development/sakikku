@@ -1,6 +1,7 @@
 ﻿namespace Health.Service.Tests.Rx
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
 
     using Microsoft.Reactive.Testing;
@@ -24,7 +25,7 @@
             healthPolicy.CheckAsync(Arg.Any<CancellationToken>()).Returns(new HealthCheck(expected.Status, expected.Message));
 
             var sut = new HealthPolicyConfiguration(expected.Policy, healthPolicy);
-            var observer = scheduler.Start(() => sut.Build(scheduler));
+            var observer = scheduler.Start(() => sut.Build(scheduler, Substitute.For<ICollection<IDisposable>>()));
 
             observer.Messages.AssertEqual(
                 OnNext<HealthCheckEntry>(
@@ -45,7 +46,7 @@
             healthPolicy.CheckAsync(Arg.Any<CancellationToken>()).Throws(new NullReferenceException(expected.Message));
 
             var sut = new HealthPolicyConfiguration(expected.Policy, healthPolicy);
-            var observer = scheduler.Start(() => sut.Build(scheduler));
+            var observer = scheduler.Start(() => sut.Build(scheduler, Substitute.For<ICollection<IDisposable>>()));
 
             observer.Messages.AssertEqual(
                 OnNext<HealthCheckEntry>(

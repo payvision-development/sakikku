@@ -1,6 +1,7 @@
 ﻿namespace Health.Service.Tests.Rx
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
 
     using Microsoft.Reactive.Testing;
@@ -28,7 +29,7 @@
             collection.Add(firstEntry.Policy, first);
             collection.Add(secondEntry.Policy, second);
 
-            var observer = scheduler.Start(() => collection.Build(scheduler));
+            var observer = scheduler.Start(() => collection.Build(scheduler, Substitute.For<ICollection<IDisposable>>()));
 
             long scheduledTicks = Subscribed + 1;
             observer.Messages.AssertEqual(

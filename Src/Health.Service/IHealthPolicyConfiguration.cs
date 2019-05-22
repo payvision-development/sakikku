@@ -3,7 +3,7 @@
     /// <summary>
     /// Configures the health policy execution within a health service.
     /// </summary>
-    public interface IHealthPolicyConfiguration
+    public interface IHealthPolicyConfiguration : IBehaviourConfiguration<IHealthPolicyConfiguration>
     {
     }
 }

@@ -12,10 +12,18 @@
     {
         private readonly IObservable<HealthReport> stream;
 
-        internal ReactiveHealthService(IObservable<HealthReport> stream) => this.stream = stream;
+        private readonly IDisposable disposable;
+
+        internal ReactiveHealthService(IObservable<HealthReport> stream, IDisposable disposable)
+        {
+            this.stream = stream;
+            this.disposable = disposable;
+        }
 
         /// <inheritdoc />
         public async Task<HealthReport> CheckAsync(CancellationToken cancellationToken) =>
             await this.stream.RunAsync(cancellationToken);
+
+        public void Dispose() => this.disposable.Dispose();
     }
 }
