@@ -29,21 +29,34 @@
         /// <summary>
         /// Gets the name of the policy that performed the health check.
         /// </summary>
-        public string Policy { get; }
+        public string Policy { get; internal set; }
 
         /// <summary>
         /// Gets the status of the checked component.
         /// </summary>
-        public HealthStatus Status { get; }
+        public HealthStatus Status { get; internal set; }
 
         /// <summary>
         /// Gets a readable message that describes the health check result.
         /// </summary>
-        public string Message { get; }
+        public string Message { get; internal set; }
 
         /// <summary>
         /// Gets the health check execution duration.
         /// </summary>
-        public TimeSpan Duration { get; }
+        public TimeSpan Duration { get; internal set; }
+
+        /// <summary>
+        /// Creates a <see cref="HealthCheckEntry"/> that indicates a timeout result.
+        /// </summary>
+        /// <param name="policy">The policy name.</param>
+        /// <param name="timeout">The timeout value.</param>
+        /// <returns>The timeout entry.</returns>
+        internal static HealthCheckEntry Timeout(string policy, TimeSpan timeout)
+        {
+            const string TimeoutMessage = "The policy has taken longer time to be executed than the maximum allowed.";
+
+            return new HealthCheckEntry(policy, HealthStatus.Unhealthy, TimeoutMessage, timeout);
+        }
     }
 }

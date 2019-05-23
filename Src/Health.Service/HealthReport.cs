@@ -30,7 +30,7 @@
         public TimeSpan Duration { get; }
 
         /// <summary>
-        /// Gets the results from each health check polcies executed by the health service.
+        /// Gets the results from each health check policies executed by the health service.
         /// </summary>
         public IEnumerable<HealthCheckEntry> Entries => this.entries;
 
@@ -52,5 +52,13 @@
 
             return result;
         }
+
+        /// <summary>
+        /// Creates a default health report containing a timeout message.
+        /// </summary>
+        /// <param name="timeout">The timeout value.</param>
+        /// <returns>The timeout health report.</returns>
+        internal static HealthReport Timeout(TimeSpan timeout) =>
+            new HealthReport(Enumerable.Empty<HealthCheckEntry>(), timeout);
     }
 }

@@ -16,6 +16,8 @@
 
         private TimeSpan? pollingInterval;
 
+        private TimeSpan? timeout;
+
         public HealthPolicyConfiguration(string policyName, IHealthPolicy healthPolicy)
         {
             this.policyName = policyName;
@@ -29,6 +31,13 @@
             return this;
         }
 
+        /// <inheritdoc />
+        public IHealthPolicyConfiguration Timeout(TimeSpan dueTime)
+        {
+            this.timeout = dueTime;
+            return this;
+        }
+
         /// <summary>
         /// Builds the configured health policy as a reactive sequence.
         /// </summary>
@@ -37,14 +46,35 @@
         internal IObservable<HealthCheckEntry> Build(IScheduler scheduler, ICollection<IDisposable> disposables)
         {
             var source = this.BuildSource(scheduler);
-            if (this.pollingInterval.HasValue)
+            source = this.BuildTimeout(source, scheduler);
+            source = this.BuildBuffer(source, scheduler, disposables);
+            return source;
+        }
+
+        private IObservable<HealthCheckEntry> BuildBuffer(
+            IObservable<HealthCheckEntry> source,
+            IScheduler scheduler,
+            ICollection<IDisposable> disposables)
+        {
+            if (!this.pollingInterval.HasValue)
             {
-                var buffer = new PollingObservable<HealthCheckEntry>(source, this.pollingInterval.Value, scheduler);
-                disposables.Add(buffer);
-                source = buffer;
+                return source;
             }
 
-            return source;
+            var buffer = new PollingObservable<HealthCheckEntry>(source, this.pollingInterval.Value, scheduler);
+            disposables.Add(buffer);
+            return buffer;
+        }
+
+        private IObservable<HealthCheckEntry> BuildTimeout(IObservable<HealthCheckEntry> source, IScheduler scheduler)
+        {
+            if (!this.timeout.HasValue)
+            {
+                return source;
+            }
+
+            return source.Timeout(this.timeout.Value, scheduler)
+                .Catch<HealthCheckEntry, TimeoutException>(_ => Observable.Return(HealthCheckEntry.Timeout(this.policyName, this.timeout.Value), scheduler));
         }
 
         private IObservable<HealthCheckEntry> BuildSource(IScheduler scheduler) =>
