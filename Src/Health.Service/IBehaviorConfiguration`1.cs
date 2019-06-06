@@ -6,7 +6,8 @@
     /// Configures how a component is going to be executed within a task scheduler.
     /// </summary>
     /// <typeparam name="TThis">Type of the configuration inheritor.</typeparam>
-    public interface IBehaviourConfiguration<out TThis>
+    public interface IBehaviorConfiguration<out TThis>
+        where TThis : IBehaviorConfiguration<TThis>
     {
         /// <summary>
         /// Configures the execution to be scheduled in a polling in order to retrieve

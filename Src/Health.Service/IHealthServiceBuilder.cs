@@ -5,7 +5,7 @@ namespace Payvision.Diagnostics.Health
     /// <summary>
     /// Builder of <see cref="IHealthService"/> instances.
     /// </summary>
-    public interface IHealthServiceBuilder : IBehaviourConfiguration<IHealthServiceBuilder>
+    public interface IHealthServiceBuilder : IBehaviorConfiguration<IHealthServiceBuilder>
     {
         /// <summary>
         /// The building health service will execute its policy tasks within the specified scheduler.

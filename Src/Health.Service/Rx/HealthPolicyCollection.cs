@@ -9,7 +9,7 @@
     /// <summary>
     /// Reactive health policy collection implementation.
     /// </summary>
-    internal sealed class HealthPolicyCollection : IHealthPolicyCollection
+    internal sealed class HealthPolicyCollection : IHealthPolicyCollection, ISequenceBuilder<HealthCheckEntry>
     {
         private readonly Dictionary<string, HealthPolicyConfiguration> policies = 
             new Dictionary<string, HealthPolicyConfiguration>(StringComparer.OrdinalIgnoreCase);
@@ -27,13 +27,8 @@
             return policy;
         }
 
-        /// <summary>
-        /// Merges all added policies within a single sequence.
-        /// </summary>
-        /// <param name="scheduler">The scheduler used to execute the sequence.</param>
-        /// <returns>The merged sequence.</returns>
-        internal IObservable<HealthCheckEntry> Build(IScheduler scheduler, ICollection<IDisposable> disposables) =>
-            this.policies.Values.Select(x => x.Build(scheduler, disposables))
-                .Merge(scheduler);
+        /// <inheritdoc />
+        public IObservable<HealthCheckEntry> Build(IScheduler scheduler, ICollection<IDisposable> compositeDisposable) =>
+            this.policies.Values.Select(x => x.Build(scheduler, compositeDisposable)).Merge(scheduler);
     }
 }
